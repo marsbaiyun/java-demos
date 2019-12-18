@@ -181,13 +181,13 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
             res.content().writeBytes(buf);
             buf.release();
-            HttpHeaderUtil.setContentLength(res, res.content().readableBytes());
+//            HttpHeaderUtil.setContentLength(res, res.content().readableBytes());
         }
 
         ChannelFuture f = ctx.channel().writeAndFlush(res);
-        if (!HttpHeaderUtil.isKeepAlive(req) || res.status().code() != 200) {
-            f.addListener(ChannelFutureListener.CLOSE);
-        }
+//        if (!HttpHeaderUtil.isKeepAlive(req) || res.status().code() != 200) {
+//            f.addListener(ChannelFutureListener.CLOSE);
+//        }
     }
 
     @Override

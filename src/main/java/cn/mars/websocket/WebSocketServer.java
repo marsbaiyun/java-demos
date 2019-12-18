@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Description：
  * Created by Mars on 2018/1/15.
  */
-@SpringBootApplication
-public final class WebSocketServer {
+//@SpringBootApplication
+public class WebSocketServer {
 
     private static final int PORT = 8083;
 

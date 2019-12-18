@@ -50,13 +50,19 @@
 			<groupId>com.alibaba.otter</groupId>
 			<artifactId>canal.client</artifactId>
 			<version>1.0.12</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--netty-->
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
-			<version>5.0.0.Alpha2</version>
+			<version>4.1.23.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jcraft</groupId>
@@ -107,6 +113,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>cn.mars.Application</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

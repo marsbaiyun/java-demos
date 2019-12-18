@@ -30,4 +30,10 @@ public class MQController {
         }
         return new ResponseEntity("发送消息成功", HttpStatus.OK);
     }
+
+    @RequestMapping("delay/send/{delayseconds}/{message}")
+    public Object sendMessage(@PathVariable long delayseconds, @PathVariable String message){
+        producer.send(message, delayseconds);
+        return new ResponseEntity("发送消息成功", HttpStatus.OK);
+    }
 }
