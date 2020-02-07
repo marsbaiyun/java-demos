@@ -1,6 +1,5 @@
 package cn.mars.mq.rabbit.util;
 
-import cn.mars.mq.rabbit.constant.MQConstant;
 import cn.mars.mq.rabbit.enums.MQ;
 import com.rabbitmq.client.*;
 import org.slf4j.Logger;
@@ -10,11 +9,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
-import static cn.mars.mq.rabbit.constant.MQConstant.DELAY_EXCHANGE_NAME;
-import static cn.mars.mq.rabbit.constant.MQConstant.DELAY_QUEUE_NAME;
-import static cn.mars.mq.rabbit.constant.MQConstant.QUEUE_NAME;
+import static cn.mars.mq.rabbit.constant.MQConstant.*;
 
 /**
  * Description：
