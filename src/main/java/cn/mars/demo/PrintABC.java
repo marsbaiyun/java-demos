@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Description：
@@ -11,14 +13,47 @@ import java.util.List;
  */
 public class PrintABC {
 
-    public static void main(String[] args) {
-        String s = "abc";
-        char[] chs = s.toCharArray();
-        handlde(chs);
+    private static Lock lock = new ReentrantLock();
+    private static int state = 0;
 
-        List<String> result = Lists.newArrayList();
-        getAllLists(result, s, "");
-        System.out.println(JSON.toJSONString(result));
+    static class MyThread extends Thread{
+        int num;
+        String letter;
+
+        public MyThread(String letter, int num) {
+            this.num = num;
+            this.letter = letter;
+        }
+
+        public void run() {
+            for (int i = 0; i < 10; ) {
+                try {
+                    lock.lock();
+                    while (state % 3 == num){
+                        System.out.print(letter);
+                        state++;
+                        i++;//变量自增必须写在这
+                    }
+                }finally {
+                    lock.unlock();
+                }
+
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+//        String s = "abc";
+//        char[] chs = s.toCharArray();
+//        handlde(chs);
+//
+//        List<String> result = Lists.newArrayList();
+//        getAllLists(result, s, "");
+//        System.out.println(JSON.toJSONString(result));
+
+        new MyThread("A",0).start();
+        new MyThread("B",1).start();
+        new MyThread("C",2).start();
     }
 
     public static void handlde(char[] chs) {

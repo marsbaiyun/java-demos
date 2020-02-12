@@ -1,11 +1,20 @@
 package cn.mars.queue.thread;
 
 import cn.mars.queue.task.Task;
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
 * AsyncThread Tester. 
@@ -15,9 +24,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 * @version 1.0 
 */ 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = AsyncThreadTest.class)
+@SpringBootTest
 @WebAppConfiguration
 public class AsyncThreadTest {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private RedissonClient redissonClient;
 
         /** 
     * 
@@ -25,9 +39,38 @@ public class AsyncThreadTest {
     * 
     */ 
     @Test
-    public void testRun() throws Exception { 
-    //TODO: Test goes here... 
-    } 
+    public void testRun() throws Exception {
+        Random random = new Random(1000000);
+        RGeo<Object> geo = redissonClient.getGeo("points");
+//        for (long i = 0;i < 10000000000l;i ++) {
+        for (long i = 0;i < 30000l;i ++) {
+            double lat = random.nextDouble();
+            double lng = random.nextDouble();
+
+            List<Object> points = geo.radius(lng, lat, Double.MAX_VALUE, GeoUnit.FEET, GeoOrder.ASC, 1);
+            if(CollectionUtils.isEmpty(points)){
+                geo.add(lng, lat, i);
+                logger.info("插入点{}-{},{}成功，暂时没有其他点", i, lng, lat);
+                continue;
+            }
+
+            Object o = points.get(0);
+            Map<Object, GeoPosition> posMap = geo.pos(o);
+            GeoPosition nearestPosition = posMap.get(o);
+            double latitude = nearestPosition.getLatitude();
+            double longitude = nearestPosition.getLongitude();
+
+            if(lat == latitude && lng == longitude){
+                logger.info("已存在点{},{}-{}，已存在的点id为{}，故不插入点{}", lng, lat, String.valueOf(o), i);
+            } else {
+                geo.add(lng, lat, i);
+                logger.info("插入点{}-{},{}成功，距离它最近的点是{}", i, lng, lat, String.valueOf(o));
+            }
+        }
+
+
+
+    }
     
         /** 
     * 

@@ -3,10 +3,10 @@ package cn.mars.gaode;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Description：
+ * Description：10个线程抢100张票
  * Created by Mars on 2020/2/6.
  */
-public class Gaode {
+public class BuyTicket {
 
     static class Worker implements Runnable {
 
@@ -27,7 +27,6 @@ public class Gaode {
 
     public static void main(String[] args) {
         AtomicInteger nums = new AtomicInteger(100);
-        //100张票  10个线程
         for (int i = 0;i < 10;i ++) {
             Worker worker = new Worker(nums);
             Thread thread = new Thread(worker, "Thread-"+i);
