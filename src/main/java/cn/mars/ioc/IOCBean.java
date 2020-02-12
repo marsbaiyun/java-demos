@@ -7,8 +7,6 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.lang.reflect.Field;
-
 /**
  * Description：
  * Created by Mars on 2020/2/11.
@@ -51,7 +49,7 @@ public class IOCBean implements BeanNameAware, BeanFactoryAware,
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+": "+ JSON.toJSONString(bean));
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
         return bean;
     }
 
@@ -75,7 +73,7 @@ public class IOCBean implements BeanNameAware, BeanFactoryAware,
 //                }
 //            }
 //        }
-        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+": "+ JSON.toJSONString(bean));
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
         return bean;
     }
 
