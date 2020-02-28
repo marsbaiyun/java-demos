@@ -1,4 +1,4 @@
-package cn.mars.netty.handler;
+package cn.mars.io.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

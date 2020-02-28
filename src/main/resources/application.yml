@@ -6,3 +6,8 @@ redisson:
 spring:
   starterdemo:
     message: applicationmessage
+
+logging:
+  file: logs/java-demos.log
+  level:
+    root: info

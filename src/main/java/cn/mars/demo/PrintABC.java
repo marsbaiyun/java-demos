@@ -1,9 +1,7 @@
 package cn.mars.demo;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -42,6 +40,32 @@ public class PrintABC {
         }
     }
 
+    private static volatile AtomicInteger count = new AtomicInteger(1);
+    private static volatile int signal = 1;
+
+    static class Worker implements Runnable {
+        private int num;
+        private int next;
+        private String content;
+
+        public Worker(int num, int next, String content) {
+            this.num = num;
+            this.next = next;
+            this.content = content;
+        }
+
+        @Override
+        public void run() {
+            while (count.intValue() <= 100) {
+                if(signal == num){
+                    System.out.printf("%s : %s\n", Thread.currentThread().getName(), content);
+                    count.incrementAndGet();
+                    signal = next;
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 //        String s = "abc";
 //        char[] chs = s.toCharArray();
@@ -51,9 +75,16 @@ public class PrintABC {
 //        getAllLists(result, s, "");
 //        System.out.println(JSON.toJSONString(result));
 
-        new MyThread("A",0).start();
-        new MyThread("B",1).start();
-        new MyThread("C",2).start();
+//        new MyThread("A",0).start();
+//        new MyThread("B",1).start();
+//        new MyThread("C",2).start();
+
+        Thread thread1 = new Thread(new PrintABC.Worker(1, 2, "A"), "thread-1");
+        Thread thread2 = new Thread(new PrintABC.Worker(2, 3, "B"), "thread-2");
+        Thread thread3 = new Thread(new PrintABC.Worker(3, 1, "C"), "thread-3");
+        thread1.start();
+        thread2.start();
+        thread3.start();
     }
 
     public static void handlde(char[] chs) {

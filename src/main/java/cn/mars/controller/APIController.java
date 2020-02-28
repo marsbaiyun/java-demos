@@ -19,11 +19,6 @@ public class APIController {
 
     @GetMapping("/hello")
     public Object hello(){
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return "hello";
     }
 

@@ -18,9 +18,10 @@ public class Server {
         new Thread(() -> {
             while (true) {
                 try {
+                    System.out.println("BIO 等待连接...");
                     // (1) 阻塞方法获取新的连接
                     Socket socket = serverSocket.accept();
-
+                    System.out.println("BIO 接收到新的连接...");
                     // (2) 每一个新的连接都创建一个线程，负责读取数据
                     new Thread(() -> {
                         try {

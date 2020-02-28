@@ -28,14 +28,16 @@ public class Server {
                 listenerChannel.socket().bind(new InetSocketAddress(8000));
                 listenerChannel.configureBlocking(false);
                 listenerChannel.register(serverSelector, SelectionKey.OP_ACCEPT);
-
+                System.out.println("NIO 等待连接...");
                 while (true) {
                     // 监测是否有新的连接，这里的1指的是阻塞的时间为1ms
                     if (serverSelector.select(1) > 0) {
+                        System.out.println("NIO 检测是否有连接...");
                         Set<SelectionKey> set = serverSelector.selectedKeys();
                         Iterator<SelectionKey> keyIterator = set.iterator();
 
                         while (keyIterator.hasNext()) {
+                            System.out.println("NIO 有新的连接接入...");
                             SelectionKey key = keyIterator.next();
 
                             if (key.isAcceptable()) {

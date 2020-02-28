@@ -1,6 +1,6 @@
-package cn.mars.netty.server;
+package cn.mars.io.netty.server;
 
-import cn.mars.netty.handler.ServerHandler;
+import cn.mars.io.netty.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
