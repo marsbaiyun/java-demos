@@ -8,6 +8,4 @@ spring:
     message: applicationmessage
 
 logging:
-  file: logs/java-demos.log
-  level:
-    root: info
+  config: classpath:logback-spring.xml

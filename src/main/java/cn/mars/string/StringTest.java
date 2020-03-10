@@ -6,6 +6,10 @@ package cn.mars.string;
  */
 public class StringTest {
 
+    static class Person {
+        public String name = "tom";
+    }
+
     public static void main(String[] args) {
         String str1 = "HelloFlyapi";
         String str2 = "HelloFlyapi";
@@ -35,5 +39,10 @@ public class StringTest {
 
         //false
         System.out.println("str3 == str3.intern() result: " + (str3 == str3.intern()));
+
+        //true
+        String name = "tom";
+        Person p = new Person();
+        System.out.println(p.name == name);
     }
 }

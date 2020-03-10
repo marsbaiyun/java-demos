@@ -61,32 +61,6 @@ public class 排序数组 {
         return nums;
     }
 
-
-    public void sort(int[] nums, int s, int e){
-        int left = s, right = e;
-        if(left < right){
-            int tmp = nums[left];
-            while (left < right) {
-                while (left < right && nums[right] >= tmp) {
-                    right --;
-                }
-                if(left < right){
-
-                }
-            }
-
-
-
-        }
-    }
-
-
-
-
-
-
-
-
     public void quickSort(int[] nums, int s, int e){
         int l = s, r = e;
         if(l < r){

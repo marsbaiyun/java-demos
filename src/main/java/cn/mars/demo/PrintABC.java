@@ -2,6 +2,7 @@ package cn.mars.demo;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -66,6 +67,50 @@ public class PrintABC {
         }
     }
 
+    //使用原子类，本例中并没有多大意义
+    private static AtomicInteger conditionCount =new AtomicInteger(1);
+
+    static class ConditionWorker implements Runnable {
+        private int index;
+        private String letter;
+        private Condition cur;
+        private Condition next;
+        private ReentrantLock lock;
+
+        public ConditionWorker(int index, String letter, Condition cur, Condition next, ReentrantLock lock) {
+            this.index = index;
+            this.letter = letter;
+            this.cur = cur;
+            this.next = next;
+            this.lock = lock;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                lock.lock();
+                try {
+                    if(conditionCount.get() % 3 != index){
+                        System.out.printf("%s await...%s\n", Thread.currentThread().getName(), conditionCount.get());
+                        cur.await();
+                    }
+                    if(conditionCount.get() > 30){
+                        next.signalAll();
+                        System.out.printf("%s break...\n", Thread.currentThread().getName());
+                        break;
+                    }
+                    System.out.printf("%s print %s\n", Thread.currentThread().getName(), letter);
+                    conditionCount.incrementAndGet();
+                    next.signalAll();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    lock.unlock();
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 //        String s = "abc";
 //        char[] chs = s.toCharArray();
@@ -79,9 +124,21 @@ public class PrintABC {
 //        new MyThread("B",1).start();
 //        new MyThread("C",2).start();
 
-        Thread thread1 = new Thread(new PrintABC.Worker(1, 2, "A"), "thread-1");
-        Thread thread2 = new Thread(new PrintABC.Worker(2, 3, "B"), "thread-2");
-        Thread thread3 = new Thread(new PrintABC.Worker(3, 1, "C"), "thread-3");
+//        Thread thread1 = new Thread(new PrintABC.Worker(1, 2, "A"), "thread-1");
+//        Thread thread2 = new Thread(new PrintABC.Worker(2, 3, "B"), "thread-2");
+//        Thread thread3 = new Thread(new PrintABC.Worker(3, 1, "C"), "thread-3");
+//        thread1.start();
+//        thread2.start();
+//        thread3.start();
+
+        ReentrantLock lock = new ReentrantLock();
+        Condition a = lock.newCondition();
+        Condition b = lock.newCondition();
+        Condition c = lock.newCondition();
+
+        Thread thread1 = new Thread(new PrintABC.ConditionWorker(1, "A", a, b, lock), "thread-1");
+        Thread thread2 = new Thread(new PrintABC.ConditionWorker(2, "B", b, c, lock), "thread-2");
+        Thread thread3 = new Thread(new PrintABC.ConditionWorker(0, "C", c, a, lock), "thread-3");
         thread1.start();
         thread2.start();
         thread3.start();
